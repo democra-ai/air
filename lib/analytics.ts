@@ -19,6 +19,7 @@ import {
 } from './firebase';
 import type { QuizResult } from './air_quiz_calculator';
 import type { QuizAnswer } from './air_quiz_data';
+import { encodeSharePayload } from './share_payload';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -46,6 +47,7 @@ interface QuizSessionData {
     aiCapability: number;
     confidenceInterval: { earliest: number; latest: number };
   };
+  shareUrl: string;
   durationSeconds: number;
   userAgent: string;
   screenSize: string;
@@ -180,6 +182,19 @@ export async function trackQuizComplete(
     console.log('[AIR Analytics] Writing quiz result to Firestore...', { uid, profileCode: result.profileCode, probability: result.replacementProbability });
     const sessionId = _sessionId || generateSessionId();
 
+    // Build share URL
+    const sharePayload = encodeSharePayload({
+      riskLevel: result.riskLevel,
+      replacementProbability: result.replacementProbability,
+      predictedReplacementYear: isFinite(result.predictedReplacementYear) ? result.predictedReplacementYear : 9999,
+      currentReplacementDegree: result.currentReplacementDegree,
+      earliestYear: result.confidenceInterval.earliest,
+      latestYear: isFinite(result.confidenceInterval.latest) ? result.confidenceInterval.latest : 9999,
+      lang,
+      profileCode: result.profileCode,
+    });
+    const shareUrl = `https://air.democra.ai/share/${sharePayload}`;
+
     const sessionData: QuizSessionData = {
       uid,
       sessionId,
@@ -202,6 +217,7 @@ export async function trackQuizComplete(
         aiCapability: result.currentAICapability,
         confidenceInterval: result.confidenceInterval,
       },
+      shareUrl,
       durationSeconds,
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       screenSize:
