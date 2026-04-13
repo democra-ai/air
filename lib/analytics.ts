@@ -206,8 +206,8 @@ export async function trackQuizComplete(
 
     const docRef = doc(collection(db, 'quiz_sessions'), sessionId);
     await setDoc(docRef, sessionData);
-  } catch {
-    // Silent — Firestore write failure should never break the app
+  } catch (err) {
+    console.error('[AIR Analytics] Firestore quiz_sessions write failed:', err);
   }
 }
 
@@ -459,8 +459,8 @@ export async function trackAnswerDistribution(
         /Mobile|Android|iPhone/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
       ) : 'unknown',
     });
-  } catch {
-    // Silent
+  } catch (err) {
+    console.error('[AIR Analytics] Firestore answer_distributions write failed:', err);
   }
 }
 
