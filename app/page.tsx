@@ -20,15 +20,18 @@ import { Particles } from '@/components/ui/particles';
 const InteractiveTimeline = dynamic(() => import('@/components/InteractiveTimeline'), { ssr: false });
 
 export default function Home() {
-  const [lang, setLang] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('air-lang') as Language | null;
-      if (saved && ['en', 'zh', 'ja', 'ko', 'de'].includes(saved)) return saved;
-      return detectBrowserLanguage();
-    }
-    return 'en';
-  });
+  const [lang, setLang] = useState<Language>('en');
   const [theme, setTheme] = useState<Theme>('dark');
+
+  // Hydration-safe: read saved language after mount
+  useEffect(() => {
+    const saved = localStorage.getItem('air-lang') as Language | null;
+    if (saved && ['en', 'zh', 'ja', 'ko', 'de'].includes(saved)) {
+      setLang(saved);
+    } else {
+      setLang(detectBrowserLanguage());
+    }
+  }, []);
 
   const [activeMobileSection, setActiveMobileSection] = useState<MobileSection>('overview');
   const [shouldMountTimeline, setShouldMountTimeline] = useState(false);
