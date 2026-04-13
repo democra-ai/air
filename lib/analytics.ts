@@ -166,11 +166,18 @@ export async function trackQuizComplete(
   });
 
   // 2. Firestore detailed record
-  if (!isFirebaseConfigured()) return;
+  if (!isFirebaseConfigured()) {
+    console.warn('[AIR Analytics] Firebase not configured, skipping Firestore write');
+    return;
+  }
   try {
     const db = getFirebaseFirestore();
-    if (!db) return;
+    if (!db) {
+      console.warn('[AIR Analytics] Firestore instance is null');
+      return;
+    }
     const uid = await getAnonymousUid();
+    console.log('[AIR Analytics] Writing quiz result to Firestore...', { uid, profileCode: result.profileCode, probability: result.replacementProbability });
     const sessionId = _sessionId || generateSessionId();
 
     const sessionData: QuizSessionData = {
