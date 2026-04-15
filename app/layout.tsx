@@ -87,6 +87,101 @@ export default function RootLayout({
             __html: `(function(){try{var s=localStorage.getItem('air-style');if(s)document.documentElement.setAttribute('data-style',s);var t=localStorage.getItem('air-theme');document.documentElement.setAttribute('data-theme',t||'dark')}catch(e){}})()`,
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@graph': [
+                {
+                  '@type': 'Organization',
+                  '@id': 'https://air.democra.ai/#organization',
+                  name: 'Democra AI',
+                  url: 'https://democra.ai',
+                  logo: 'https://air.democra.ai/share-card.png',
+                },
+                {
+                  '@type': 'WebSite',
+                  '@id': 'https://air.democra.ai/#website',
+                  url: 'https://air.democra.ai',
+                  name: 'AIR — AI Replacement Risk Index',
+                  description: 'A research-grade calculator measuring AI job replacement probability across 798 occupations, based on BLS OES, O*NET, and Anthropic Economic Index.',
+                  publisher: { '@id': 'https://air.democra.ai/#organization' },
+                  inLanguage: ['en', 'zh', 'ja', 'ko', 'de'],
+                },
+                {
+                  '@type': 'Quiz',
+                  '@id': 'https://air.democra.ai/#quiz',
+                  name: 'AI Kill Threshold — AI Replacement Risk Test',
+                  description: 'A 16-question quiz across 4 dimensions (Learnability, Evaluation Objectivity, Risk Tolerance, Human Presence) that maps your profession to one of 16 profile types with calibrated AI replacement probability.',
+                  educationalLevel: 'professional',
+                  typicalAgeRange: '18-',
+                  numberOfQuestions: 16,
+                  timeRequired: 'PT3M',
+                  inLanguage: ['en', 'zh', 'ja', 'ko', 'de'],
+                  about: {
+                    '@type': 'Thing',
+                    name: 'AI Replacement Risk',
+                    description: 'The probability an occupation will be replaced by artificial intelligence',
+                  },
+                  isBasedOn: [
+                    { '@type': 'Dataset', name: 'BLS Occupational Employment and Wage Statistics 2023', url: 'https://www.bls.gov/oes/' },
+                    { '@type': 'Dataset', name: 'O*NET Occupational Information Network', url: 'https://www.onetonline.org/' },
+                    { '@type': 'ScholarlyArticle', name: 'GPTs are GPTs: Labor Market Impact Potential of LLMs', url: 'https://arxiv.org/abs/2303.10130', author: 'Eloundou et al.' },
+                    { '@type': 'Dataset', name: 'OpenAI GDPval Leaderboard', url: 'https://evals.openai.com/gdpval/leaderboard' },
+                    { '@type': 'Report', name: 'Future of Jobs Report 2025', publisher: 'World Economic Forum', url: 'https://www.weforum.org/publications/the-future-of-jobs-report-2025/' },
+                  ],
+                },
+                {
+                  '@type': 'FAQPage',
+                  '@id': 'https://air.democra.ai/#faq',
+                  mainEntity: [
+                    {
+                      '@type': 'Question',
+                      name: 'What is the AI Kill Threshold?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'The AI Kill Threshold is a probability (0-100%) indicating how likely your occupation will be replaced by AI. It is calculated using the Swiss Cheese Barrier Model across four independent dimensions: Learnability, Evaluation Objectivity, Risk Tolerance, and Human Presence.',
+                      },
+                    },
+                    {
+                      '@type': 'Question',
+                      name: 'How is the replacement probability calculated?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'Using a Weighted Power Mean with r=-2 across four dimensions. Learnability has weight 0.30, Evaluation Objectivity 0.25, Risk Tolerance 0.20, Human Presence 0.25. An additional E+O interaction bonus applies when both knowledge is explicit and evaluation is objective.',
+                      },
+                    },
+                    {
+                      '@type': 'Question',
+                      name: 'What data sources does AIR use?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'AIR aggregates from BLS OES 2023 (798 occupations employment data), O*NET (task structure labels), Eloundou et al. 2023 (LLM exposure measurement across 19,265 tasks), OpenAI GDPval (AI vs human expert blind evaluation), and the World Economic Forum Future of Jobs Report 2025.',
+                      },
+                    },
+                    {
+                      '@type': 'Question',
+                      name: 'How does AIR differ from MBTI?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'MBTI measures personality. AIR measures occupational AI-replacement risk. Both use four binary dimensions producing a 4-letter code, but AIR\'s dimensions are grounded in automation economics literature and the output is backed by employment data from 798 real occupations.',
+                      },
+                    },
+                    {
+                      '@type': 'Question',
+                      name: 'What is the current industry-wide AI replacement rate?',
+                      acceptedAnswer: {
+                        '@type': 'Answer',
+                        text: 'As of 2026, the employment-weighted industry-wide AI replacement rate is 24.7%, calculated as Task Exposure (34.8%, Eloundou et al. 2023) times AI Win Rate vs human experts (71.3%, OpenAI GDPval).',
+                      },
+                    },
+                  ],
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="antialiased font-body bg-background text-foreground transition-colors duration-300">
         <AnalyticsProvider />
